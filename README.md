@@ -84,7 +84,7 @@ Now, your Action will be called everytime you upload a new object to your bucket
 ## Troubleshooting
 
 - LogDNA ingestion API has a limitation of 10 MB per request.
-- ***ESOCKETTIMEDOUT***, ***ECONNRESET*** and ***ETIMEDOUT*** are LogDNA Ingest API errors. The script will automatically resend the logs.
+- **_ESOCKETTIMEDOUT_**, **_ECONNRESET_** and **_ETIMEDOUT_** are LogDNA Ingest API errors. The script will automatically resend the logs.
 
 ## LICENSE
 
