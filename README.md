@@ -7,6 +7,8 @@
 
 [IBM Cloud® Flow Logs for VPC](https://cloud.ibm.com/catalog/services/is.flow-log-collector) enable the collection, storage, and presentation of information about the Internet Protocol (IP) traffic going to and from network interfaces within your Virtual Private Cloud (VPC). The service stores collector output in a bucket on [IBM Cloud Object Storage (COS)](https://cloud.ibm.com/catalog/services/cloud-object-storage) - at least 1 log package (on a `.gz` file). For those logs, there is a service called [IBM Log Analysis with LogDNA](https://cloud.ibm.com/catalog/services/ibm-log-analysis-with-logdna) that can receive all logs and display them in a single platform (you can send logs from your Kubernetes cluster, VMs, etc). To import all logs into LogDNA, you need to set up a Serverless function on IBM Cloud Functions which uses a Trigger to call your function automatically. The Trigger listens for a write event on IBM Cloud Object Storage. Whenever Flow Logs for VPC stores a new object into your IBM Cloud Object Storage bucket, the Trigger calls your function that process the log package and automatcally send it to your LogDNA instance.
 
+![Architecture Design](doc/source/images/architecture.png)
+
 Before you follow step-by-step below, you need to install [IBM Cloud CLI](https://cloud.ibm.com/docs/cli/reference/ibmcloud/download_cli.html#install_use) and [IBM Cloud Functions CLI](https://cloud.ibm.com/openwhisk/learn/cli) in your local machine. Then, you need to login in your IBM Cloud account on IBM Cloud CLI (if you haven't already done, run `ibmcloud login`).
 
 ## 1. Clone this repository
@@ -49,7 +51,12 @@ Run the following command with the IBM Cloud Object Storage credentials and the 
 - COS_INSTANCEID is the resource_instance_id field, generated on service credentials in your COS instance.
 
 ```sh
-export LOGDNA_HOSTNAME="" LOGDNA_INGESTION_KEY="" COS_BUCKET_ARCHIVE="" COS_APIKEY="" COS_ENDPOINT="" COS_INSTANCEID=""
+export LOGDNA_HOSTNAME="" \
+  LOGDNA_INGESTION_KEY="" \
+  COS_BUCKET_ARCHIVE="" \
+  COS_APIKEY="" \
+  COS_ENDPOINT="" \
+  COS_INSTANCEID=""
 ```
 
 ## 5. Deploy the Action
