@@ -2,21 +2,19 @@
  *
  * Copyright 2021 IBM Corp.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License is distributed on an 'AS IS' BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
  */
-// https://www.npmjs.com/package/dotenv
-require("dotenv").config();
 // https://www.npmjs.com/package/ibm-cos-sdk
 const { S3 } = require("ibm-cos-sdk");
 // https://www.npmjs.com/package/request
@@ -50,18 +48,19 @@ let HOSTNAME;
 
 async function uploadAndDeleteBucket(bucketReceiver, fileName) {
   try {
-    console.log("DEBUG: Uploading the log file");
+    const encodedURI = encodeURI(fileName);
+    console.log(
+      `DEBUG: Uploading the log file = ${bucketReceiver}/${encodedURI}`
+    );
     await cos
       .copyObject({
         Bucket: BUCKET_ARCHIVE,
-        CopySource: `${bucketReceiver}/${fileName}`,
+        CopySource: `${bucketReceiver}/${encodedURI}`,
         Key: fileName,
       })
       .promise();
     console.log("DEBUG: Deleting the log file");
-    await cos
-      .deleteObject({ Bucket: bucketReceiver, Key: fileName })
-      .promise();
+    await cos.deleteObject({ Bucket: bucketReceiver, Key: fileName }).promise();
     return { status: 200, message: "Update and delete log file DONE" };
   } catch (e) {
     console.error(e);
@@ -103,35 +102,38 @@ async function downloadAndSend(params) {
     console.log(`Flow Logs: ${json.number_of_flow_logs}`);
     const fj = { lines: [] };
     if (json.number_of_flow_logs === 0) {
-        fj.lines.push({
-            timestamp: new Date(json.capture_end_time).getTime(),
-            line: "[AUTOMATIC] LOG FROM FLOW LOGS STORED ON COS BUCKET",
-            app: "flow-logs",
-            level: "INFO",
-            meta: {
-                customfield: json,
-            },
-        });
+      fj.lines.push({
+        timestamp: new Date(json.capture_end_time).getTime(),
+        line: "[AUTOMATIC] LOG FROM FLOW LOGS STORED ON COS BUCKET",
+        app: "flow-logs",
+        level: "INFO",
+        meta: {
+          customfield: json,
+        },
+      });
     } else {
-        const promises = json.flow_logs.map(async (flow_log, i) => {
-            const input = { ...json };
-            input.flow_logs = flow_log;
-            fj.lines.push({
-                timestamp: new Date(json.capture_end_time).getTime(),
-                line: "[AUTOMATIC] LOG FROM FLOW LOGS STORED ON COS BUCKET",
-                app: "flow-logs",
-                level: "INFO",
-                meta: {
-                    customfield: input,
-                },
-            });
+      const promises = json.flow_logs.map(async (flow_log, i) => {
+        const input = { ...json };
+        input.flow_logs = flow_log;
+        fj.lines.push({
+          timestamp: new Date(json.capture_end_time).getTime(),
+          line: "[AUTOMATIC] LOG FROM FLOW LOGS STORED ON COS BUCKET",
+          app: "flow-logs",
+          level: "INFO",
+          meta: {
+            customfield: input,
+          },
         });
-        await Promise.all(promises);
+      });
+      await Promise.all(promises);
     }
     console.log("DONE PARSE TO LOGDNA FORMAT");
     await sendLogDNA(fj);
     console.log("DEBUG: uploadAndDeleteBucket");
-    return await uploadAndDeleteBucket(params.notification.bucket_name, params.notification.object_name);
+    return await uploadAndDeleteBucket(
+      params.notification.bucket_name,
+      params.notification.object_name
+    );
   } catch (e) {
     console.error(e);
     return { status: 500, message: JSON.stringify(e) };
