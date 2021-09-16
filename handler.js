@@ -68,10 +68,10 @@ async function uploadAndDeleteBucket(bucketReceiver, fileName) {
   }
 }
 
-function sendLogDNA(json) {
+function sendLogDNA(json, region) {
   return request({
     method: "POST",
-    url: `https://logs.us-south.logging.cloud.ibm.com/logs/ingest?hostname=${HOSTNAME}`,
+    url: `https://logs.${region}.logging.cloud.ibm.com/logs/ingest?hostname=${HOSTNAME}`,
     body: json,
     auth: {
       user: INGESTION_KEY,
@@ -86,7 +86,7 @@ function sendLogDNA(json) {
     .catch(async (e) => {
       console.error(e);
       console.log("Retrying to send package");
-      return sendLogDNA(json);
+      return sendLogDNA(json, region);
     });
 }
 
@@ -128,7 +128,7 @@ async function downloadAndSend(params) {
       await Promise.all(promises);
     }
     console.log("DONE PARSE TO LOGDNA FORMAT");
-    await sendLogDNA(fj);
+    await sendLogDNA(fj, params.region);
     console.log("DEBUG: uploadAndDeleteBucket");
     return await uploadAndDeleteBucket(
       params.notification.bucket_name,

@@ -45,6 +45,7 @@ Run the following command with the IBM Cloud Object Storage credentials and the 
 
 - LOGDNA_HOSTNAME is the name of the source of the log line.
 - LOGDNA_INGESTION_KEY is used to connect the Node.js function to the LogDNA instance.
+- LOGDNA_REGION is the region where your LogDNA instance is running (i.e. `us-south` for Dallas region).
 - COS_BUCKET_ARCHIVE is the bucket where you will save the log package after you send it to LogDNA (consider it as your long-term retention).
 - COS_APIKEY is the apikey field, generated on service credentials in your COS instance.
 - COS_ENDPOINT is the endpoint available on Endpoint section in your COS instance. It depends on the resiliency and location that your bucket is defined.
@@ -53,6 +54,7 @@ Run the following command with the IBM Cloud Object Storage credentials and the 
 ```sh
 export LOGDNA_HOSTNAME="" \
   LOGDNA_INGESTION_KEY="" \
+  LOGDNA_REGION="" \
   COS_BUCKET_ARCHIVE="" \
   COS_APIKEY="" \
   COS_ENDPOINT="" \
