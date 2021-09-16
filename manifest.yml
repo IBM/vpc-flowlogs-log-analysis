@@ -26,6 +26,7 @@ packages:
         inputs:
           hostname: $LOGDNA_HOSTNAME
           ingestionKey: $LOGDNA_INGESTION_KEY
+          region: $LOGDNA_REGION
           bucketArchive: $COS_BUCKET_ARCHIVE
           apiKeyId: $COS_APIKEY
           endpoint: $COS_ENDPOINT
