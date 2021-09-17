@@ -92,10 +92,10 @@ function sendLogDNA(json, region) {
 
 async function downloadAndSend(params) {
   try {
+    console.log(`DEBUG: log file = ${params.notification.object_name}`);
     const o = await cos
       .getObject({ Bucket: params.notification.bucket_name, Key: params.notification.object_name })
       .promise();
-    console.log(`DEBUG: log file = ${params.notification.object_name}`);
     const buffer = Buffer.from(o.Body);
     const newBuffer = await unzipPromise(buffer);
     const json = JSON.parse(newBuffer);
@@ -160,6 +160,7 @@ async function main(params) {
   const response = await downloadAndSend(params);
   console.log(`DEBUG: downloadAndSend = ${JSON.stringify(response.message)}`);
   console.timeEnd("Flow Logs Collector on COS");
+  return response;
 }
 
 exports.main = main;
