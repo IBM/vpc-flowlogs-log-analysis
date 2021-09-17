@@ -2,11 +2,12 @@
   "name": "flow-logs-logdna",
   "version": "1.0.0",
   "description": "Pull the lastest log file on Cloud Object Storage to store on LogDNA",
-  "main": "handler.js",
+  "main": "index.js",
   "scripts": {
     "lint": "eslint *.js --ignore-path .gitignore .",
     "pretest": "npm run lint",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -19,6 +20,9 @@
   },
   "homepage": "https://github.com/IBM/flow-logs-logdna#readme",
   "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "helmet": "^4.6.0",
     "ibm-cos-sdk": "^1.10.2",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
