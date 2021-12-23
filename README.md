@@ -5,7 +5,7 @@
 [![LICENSE](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](https://github.com/IBM/vpc-flowlogs-log-analysis/blob/master/LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/IBM/vpc-flowlogs-log-analysis/pulls)
 
-[IBM Cloud® Flow Logs for VPC](https://cloud.ibm.com/catalog/services/is.flow-log-collector) enable the collection, storage, and presentation of information about the Internet Protocol (IP) traffic going to and from network interfaces within your Virtual Private Cloud (VPC). The service stores collector output in a bucket on [IBM Cloud Object Storage (COS)](https://cloud.ibm.com/catalog/services/cloud-object-storage) - at least 1 log package (on a `.gz` file). For those logs, there is a service called [IBM Log Analysis with LogDNA](https://cloud.ibm.com/catalog/services/ibm-log-analysis-with-logdna) that can receive all logs and display them in a single platform (you can send logs from your Kubernetes cluster, VMs, etc). To import all logs into LogDNA, you need to set up a Serverless function on IBM Cloud Functions which uses a Trigger to call your function automatically. The Trigger listens for a write event on IBM Cloud Object Storage. Whenever Flow Logs for VPC stores a new object into your IBM Cloud Object Storage bucket, the Trigger calls your function that process the log package and automatcally send it to your LogDNA instance.
+[IBM Cloud® Flow Logs for VPC](https://cloud.ibm.com/catalog/services/is.flow-log-collector) enable the collection, storage, and presentation of information about the Internet Protocol (IP) traffic going to and from network interfaces within your Virtual Private Cloud (VPC). The service stores collector output in a bucket on [IBM Cloud Object Storage (COS)](https://cloud.ibm.com/catalog/services/cloud-object-storage) - at least 1 log package (on a `.gz` file). For those logs, there is a service called [IBM Log Analysis](https://cloud.ibm.com/catalog/services/ibm-log-analysis) that can receive all logs and display them in a single platform (you can send logs from your Kubernetes cluster, VMs, etc). To import all logs into your IBM Log Analysis instance, you need to set up a Serverless function on IBM Cloud Functions which uses a Trigger to call your function automatically. The Trigger listens for a write event on IBM Cloud Object Storage. Whenever Flow Logs for VPC stores a new object into your IBM Cloud Object Storage bucket, the Trigger calls your function that process the log package and automatcally send it to your IBM Log Analysis instance.
 
 ![Architecture Design](doc/source/images/architecture.png)
 
@@ -25,7 +25,7 @@ cd vpc-flowlogs-log-analysis
 Access the IBM Cloud Catalog and create a [IBM Cloud Object Storage](https://cloud.ibm.com/catalog/services/cloud-object-storage). After you create the instance, you have to create two Buckets with the same Resiliency and Location (e.g `Regional` and `us-south`):
 
 - To receive the log files from CIS;
-- To store the log files after you send the content to LogDNA.
+- To store the log files after you send the content to IBM Log Analysis.
 
 Remember the name for each one of the Bucket name, because you're going to use them in the next step.
 
@@ -33,28 +33,28 @@ For your service instance, you need to create a Service credential. You can find
 
 > You can find the Endpoint URL on `Endpoints` tab. The correct enpoint for your usecase depends on the Resilience and Location you choose when you create your Buckets. For more information, access the [IBM Cloud Docs](https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-endpoints).
 
-## 3. Create a IBM Log Analysis with LogDNA service instance
+## 3. Create a IBM Log Analysis service instance
 
-Access the IBM Cloud Catalog and create a [IBM Log Analysis with LogDNA](https://cloud.ibm.com/catalog/services/ibm-log-analysis-with-logdna). After you create the instance, you have to access the service by clicking on `View LogDNA` button.
+Access the IBM Cloud Catalog and create a [IBM Log Analysis](https://cloud.ibm.com/catalog/services/ibm-log-analysis). After you create the instance, you have to access the service by clicking on `View IBM Log Analysis` button.
 
 Access the `Settings` -> `ORGANIZATION` -> `API Keys` to get your Ingestion Keys.
 
 ## 4. Set up the environment variables to deploy them as function's parameters
 
-Run the following command with the IBM Cloud Object Storage credentials and the bucket name (for long-term retention), and IBM Log Analysis with LogDNA ingestion key:
+Run the following command with the IBM Cloud Object Storage credentials and the bucket name (for long-term retention), and IBM Log Analysis ingestion key:
 
-- LOGDNA_HOSTNAME is the name of the source of the log line.
-- LOGDNA_INGESTION_KEY is used to connect the Node.js function to the LogDNA instance.
-- LOGDNA_REGION is the region where your LogDNA instance is running (i.e. `us-south` for Dallas region).
-- COS_BUCKET_ARCHIVE is the bucket where you will save the log package after you send it to LogDNA (consider it as your long-term retention).
+- LOG_ANALYSIS_HOSTNAME is the name of the source of the log line.
+- LOG_ANALYSIS_INGESTION_KEY is used to connect the Node.js function to the IBM Log Analysis instance.
+- LOG_ANALYSIS_REGION is the region where your IBM Log Analysis instance is running (i.e. `us-south` for Dallas region).
+- COS_BUCKET_ARCHIVE is the bucket where you will save the log package after you send it to IBM Log Analysis (consider it as your long-term retention).
 - COS_APIKEY is the apikey field, generated on service credentials in your COS instance.
 - COS_ENDPOINT is the endpoint available on Endpoint section in your COS instance. It depends on the resiliency and location that your bucket is defined.
 - COS_INSTANCEID is the resource_instance_id field, generated on service credentials in your COS instance.
 
 ```sh
-export LOGDNA_HOSTNAME="" \
-  LOGDNA_INGESTION_KEY="" \
-  LOGDNA_REGION="" \
+export LOG_ANALYSIS_HOSTNAME="" \
+  LOG_ANALYSIS_INGESTION_KEY="" \
+  LOG_ANALYSIS_REGION="" \
   COS_BUCKET_ARCHIVE="" \
   COS_APIKEY="" \
   COS_ENDPOINT="" \
@@ -85,8 +85,8 @@ Now, your Action will be called everytime you upload a new object to your bucket
 
 ## Troubleshooting
 
-- LogDNA ingestion API has a limitation of 10 MB per request.
-- **_ESOCKETTIMEDOUT_**, **_ECONNRESET_** and **_ETIMEDOUT_** are LogDNA Ingest API errors. The script will automatically resend the logs.
+- IBM Log Analysis ingestion API has a limitation of 10 MB per request.
+- **_ESOCKETTIMEDOUT_**, **_ECONNRESET_** and **_ETIMEDOUT_** are IBM Log Analysis Ingest API errors. The script will automatically resend the logs.
 
 ## LICENSE
 

@@ -39,7 +39,7 @@ let cos;
 let BUCKET_ARCHIVE;
 /**
  *
- * IBM LOG ANALYSIS WITH LOGDNA
+ * IBM LOG ANALYSIS
  * API Key and Hostname to send the logs
  *
  */
@@ -68,7 +68,7 @@ async function uploadAndDeleteBucket(bucketReceiver, fileName) {
   }
 }
 
-function sendLogDNA(json, region) {
+function sendIBMLogAnalysis(json, region) {
   return request({
     method: "POST",
     url: `https://logs.${region}.logging.cloud.ibm.com/logs/ingest?hostname=${HOSTNAME}`,
@@ -86,7 +86,7 @@ function sendLogDNA(json, region) {
     .catch(async (e) => {
       console.error(e);
       console.log("Retrying to send package");
-      return sendLogDNA(json, region);
+      return sendIBMLogAnalysis(json, region);
     });
 }
 
@@ -127,8 +127,8 @@ async function downloadAndSend(params) {
       });
       await Promise.all(promises);
     }
-    console.log("DONE PARSE TO LOGDNA FORMAT");
-    await sendLogDNA(fj, params.region);
+    console.log("DONE PARSE TO IBM LOG ANALYSIS FORMAT");
+    await sendIBMLogAnalysis(fj, params.region);
     console.log("DEBUG: uploadAndDeleteBucket");
     return await uploadAndDeleteBucket(
       params.notification.bucket_name,

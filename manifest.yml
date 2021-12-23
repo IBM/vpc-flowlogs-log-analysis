@@ -24,9 +24,9 @@ packages:
         function: handler.js
         web-export: false
         inputs:
-          hostname: $LOGDNA_HOSTNAME
-          ingestionKey: $LOGDNA_INGESTION_KEY
-          region: $LOGDNA_REGION
+          hostname: $LOG_ANALYSIS_HOSTNAME
+          ingestionKey: $LOG_ANALYSIS_INGESTION_KEY
+          region: $LOG_ANALYSIS_REGION
           bucketArchive: $COS_BUCKET_ARCHIVE
           apiKeyId: $COS_APIKEY
           endpoint: $COS_ENDPOINT

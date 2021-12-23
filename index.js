@@ -34,9 +34,9 @@ app.use(helmet());
 app.post("/", (req, res) => {
   let params = {
     ...req.body,
-    hostname: process.env.LOGDNA_HOSTNAME,
-    ingestionKey: process.env.LOGDNA_INGESTION_KEY,
-    region: process.env.LOGDNA_REGION,
+    hostname: process.env.LOG_ANALYSIS_HOSTNAME,
+    ingestionKey: process.env.LOG_ANALYSIS_INGESTION_KEY,
+    region: process.env.LOG_ANALYSIS_REGION,
     bucketArchive: process.env.COS_BUCKET_ARCHIVE,
     apiKeyId: process.env.COS_APIKEY,
     endpoint: process.env.COS_ENDPOINT,

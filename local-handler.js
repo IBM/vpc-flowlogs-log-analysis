@@ -29,9 +29,9 @@ const MAX_KEYS = 1;
 
 //
 let params = {
-  hostname: process.env.LOGDNA_HOSTNAME,
-  ingestionKey: process.env.LOGDNA_INGESTION_KEY,
-  region: process.env.LOGDNA_REGION,
+  hostname: process.env.LOG_ANALYSIS_HOSTNAME,
+  ingestionKey: process.env.LOG_ANALYSIS_INGESTION_KEY,
+  region: process.env.LOG_ANALYSIS_REGION,
   bucketArchive: process.env.COS_BUCKET_ARCHIVE,
   apiKeyId: process.env.COS_APIKEY,
   endpoint: process.env.COS_ENDPOINT,
