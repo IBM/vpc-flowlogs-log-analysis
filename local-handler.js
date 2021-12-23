@@ -42,7 +42,6 @@ let params = {
 let cos;
 
 async function main() {
-  console.time("Flow Logs LogDNA");
   if (!cos) {
     cos = new S3({
       endpoint: params.endpoint,
@@ -54,29 +53,35 @@ async function main() {
   const lo = await cos
     .listObjectsV2({ Bucket: BUCKET_RECEIVER, MaxKeys: MAX_KEYS })
     .promise();
-  console.log(`DEBUG: log file = ${lo.Contents[0].Key}`);
-  params = {
-    ...params,
-    notification: {
-      bucket_name: BUCKET_RECEIVER,
-      object_name: lo.Contents[0].Key,
-    },
-  };
-  const response = await handler.main(params);
-  console.timeEnd("Flow Logs LogDNA");
-  switch (response.status) {
-    case 200:
-      console.log(`DEBUG: Fetch new log file`);
-      await main(params);
-      break;
-    case 204:
-      console.log(`DEBUG: Wait 30 seconds to fetch new log file on COS Bucket`);
-      await new Promise((r) => setTimeout(r, 30000));
-      await main(params);
-      break;
-    default:
-      console.log(`DEBUG: Uncommon behavior`);
-      break;
+  if (lo.Contents[0]) {
+    console.log(`DEBUG: log file = ${lo.Contents[0].Key}`);
+    params = {
+      ...params,
+      notification: {
+        bucket_name: BUCKET_RECEIVER,
+        object_name: lo.Contents[0].Key,
+      },
+    };
+    const response = await handler.main(params);
+    switch (response.status) {
+      case 200:
+        console.log(`DEBUG: Fetch new log file`);
+        await main(params);
+        break;
+      case 204:
+        console.log(
+          `DEBUG: Wait 30 seconds to fetch new log file on COS Bucket`
+        );
+        await new Promise((r) => setTimeout(r, 30000));
+        await main(params);
+        break;
+      default:
+        console.log(`DEBUG: Uncommon behavior`);
+        break;
+    }
+  } else {
+    await new Promise((r) => setTimeout(r, 30000));
+    await main(params);
   }
 }
 
