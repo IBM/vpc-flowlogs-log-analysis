@@ -2,8 +2,8 @@
 
 [![IBM Cloud Powered](https://img.shields.io/badge/IBM%20Cloud-powered-blue.svg)](https://cloud.ibm.com)
 [![Platform](https://img.shields.io/badge/platform-nodejs-lightgrey.svg?style=flat)](https://developer.ibm.com/technologies/node-js/)
-[![LICENSE](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](https://github.com/IBM/flow-logs-logdna/blob/master/LICENSE)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/IBM/flow-logs-logdna/pulls)
+[![LICENSE](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](https://github.com/IBM/vpc-flowlogs-log-analysis/blob/master/LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/IBM/vpc-flowlogs-log-analysis/pulls)
 
 [IBM Cloud® Flow Logs for VPC](https://cloud.ibm.com/catalog/services/is.flow-log-collector) enable the collection, storage, and presentation of information about the Internet Protocol (IP) traffic going to and from network interfaces within your Virtual Private Cloud (VPC). The service stores collector output in a bucket on [IBM Cloud Object Storage (COS)](https://cloud.ibm.com/catalog/services/cloud-object-storage) - at least 1 log package (on a `.gz` file). For those logs, there is a service called [IBM Log Analysis with LogDNA](https://cloud.ibm.com/catalog/services/ibm-log-analysis-with-logdna) that can receive all logs and display them in a single platform (you can send logs from your Kubernetes cluster, VMs, etc). To import all logs into LogDNA, you need to set up a Serverless function on IBM Cloud Functions which uses a Trigger to call your function automatically. The Trigger listens for a write event on IBM Cloud Object Storage. Whenever Flow Logs for VPC stores a new object into your IBM Cloud Object Storage bucket, the Trigger calls your function that process the log package and automatcally send it to your LogDNA instance.
 
@@ -16,8 +16,8 @@ Before you follow step-by-step below, you need to install [IBM Cloud CLI](https:
 Download the source code from Github and access the project folder.
 
 ```sh
-git clone https://github.com/IBM/flow-logs-logdna.git
-cd flow-logs-logdna
+git clone https://github.com/IBM/vpc-flowlogs-log-analysis.git
+cd vpc-flowlogs-log-analysis
 ```
 
 ## 2. Create an IBM Cloud Object Storage service instance

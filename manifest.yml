@@ -16,7 +16,7 @@
 
 # Basic action code in Node.js
 packages:
-  flow-logs-logdna:
+  vpc-flowlogs-log-analysis:
     version: 1.0.0
     license: Apache-2.0
     actions:

@@ -1,7 +1,7 @@
 {
-  "name": "flow-logs-logdna",
-  "version": "1.0.0",
-  "description": "Pull the lastest log file on Cloud Object Storage to store on LogDNA",
+  "name": "vpc-flowlogs-log-analysis",
+  "version": "1.1.0",
+  "description": "Send all log files from IBM Cloud Object Storage bucket to an IBM Log Analysis instance",
   "main": "index.js",
   "scripts": {
     "lint": "eslint *.js --ignore-path .gitignore .",
@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/IBM/flow-logs-logdna.git"
+    "url": "git+https://github.com/IBM/vpc-flowlogs-log-analysis.git"
   },
   "author": "Victor Shinya <vshinya@br.ibm.com>",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/IBM/flow-logs-logdna/issues"
+    "url": "https://github.com/IBM/vpc-flowlogs-log-analysis/issues"
   },
-  "homepage": "https://github.com/IBM/flow-logs-logdna#readme",
+  "homepage": "https://github.com/IBM/vpc-flowlogs-log-analysis#readme",
   "dependencies": {
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
